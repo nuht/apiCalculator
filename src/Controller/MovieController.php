@@ -27,7 +27,7 @@ class MovieController extends FOSRestController
         $repository = $this->getDoctrine()->getRepository(Movie::class);
         $movies = $repository->findall();
 
-        return $this->handleView($this->$view($movies));
+        return $this->handleView($this->view($movies));
     }
 
     /**
