@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Result;
 use App\Entity\Calculation;
 use App\Form\CalculationType;
 
@@ -19,17 +18,17 @@ class CalculationController extends FOSRestController
 {
 
     /**
-     * Lists all Results
-     * @Rest\Get("/results")
+     * Lists all Calculations
+     * @Rest\Get("/calculations")
      * 
      * @return Response
      */
-    public function getResults(Request $request)
+    public function getCalculations(Request $request)
     {
-        $repository = $this->getDoctrine()->getRepository(Result::class);
-        $results = $repository->findall();
+        $repository = $this->getDoctrine()->getRepository(Calculation::class);
+        $calculations = $repository->findall();
 
-        return $this->handleView($this->view($results));
+        return $this->handleView($this->view($calculations));
     }
 
     /**
@@ -40,8 +39,7 @@ class CalculationController extends FOSRestController
      */
     public function addition(Request $request)
     {
-        $result         = new Result();
-        $calculation    = new Calculation($result);
+        $calculation    = new Calculation();
 
         $form = $this->createForm(CalculationType::class, $calculation);
         $data = json_decode($request->getContent(), true);
@@ -50,28 +48,27 @@ class CalculationController extends FOSRestController
         if($form->isSubmitted() && $form->isValid()) 
         {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($calculation);
             
-            $result->setResultNumber($calculation->getParameterOne() + $calculation->getParameterTwo());
+            $calculation->setResult($calculation->getParameterOne() + $calculation->getParameterTwo());
+            $calculation->setCalculType('addition');
 
-            $em->persist($result);
+            $em->persist($calculation);
             $em->flush();
 
-            return $this->handleView($this->view(['status' => 'ok'], Response::HTTP_CREATED));
+            return $this->handleView($this->view(['result :' => $calculation->getResult()], Response::HTTP_CREATED));
         }
         return $this->handleView($this->$view($form->getErrors()));
     }
 
     /**
      * Create Calculate and his Result from the subtract
-     * @Rest\Post("/subtract")
+     * @Rest\Post("/subtraction")
      * 
      * @return Response
      */
-    public function subtract(Request $request)
+    public function subtraction(Request $request)
     {
-        $result         = new Result();
-        $calculation    = new Calculation($result);
+        $calculation    = new Calculation();
 
         $form = $this->createForm(CalculationType::class, $calculation);
         $data = json_decode($request->getContent(), true);
@@ -80,28 +77,27 @@ class CalculationController extends FOSRestController
         if($form->isSubmitted() && $form->isValid()) 
         {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($calculation);
             
-            $result->setResultNumber($calculation->getParameterOne() - $calculation->getParameterTwo());
+            $calculation->setResult($calculation->getParameterOne() - $calculation->getParameterTwo());
+            $calculation->setCalculType('subtraction');
 
-            $em->persist($result);
+            $em->persist($calculation);
             $em->flush();
 
-            return $this->handleView($this->view(['status' => 'ok'], Response::HTTP_CREATED));
+            return $this->handleView($this->view(['result :' => $calculation->getResult()], Response::HTTP_CREATED));
         }
         return $this->handleView($this->$view($form->getErrors()));
     }
 
     /**
      * Create Calculate and his Result from the multiply
-     * @Rest\Post("/multiply")
+     * @Rest\Post("/multiplication")
      * 
      * @return Response
      */
-    public function multiply(Request $request)
+    public function multiplication(Request $request)
     {
-        $result         = new Result();
-        $calculation    = new Calculation($result);
+        $calculation    = new Calculation();
 
         $form = $this->createForm(CalculationType::class, $calculation);
         $data = json_decode($request->getContent(), true);
@@ -110,14 +106,14 @@ class CalculationController extends FOSRestController
         if($form->isSubmitted() && $form->isValid()) 
         {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($calculation);
             
-            $result->setResultNumber($calculation->getParameterOne() * $calculation->getParameterTwo());
+            $calculation->setResult($calculation->getParameterOne() * $calculation->getParameterTwo());
+            $calculation->setCalculType('multiplication');
 
-            $em->persist($result);
+            $em->persist($calculation);
             $em->flush();
 
-            return $this->handleView($this->view(['status' => 'ok'], Response::HTTP_CREATED));
+            return $this->handleView($this->view(['result :' => $calculation->getResult()], Response::HTTP_CREATED));
         }
         return $this->handleView($this->$view($form->getErrors()));
     }
@@ -129,8 +125,7 @@ class CalculationController extends FOSRestController
      */
     public function division(Request $request)
     {
-        $result         = new Result();
-        $calculation    = new Calculation($result);
+        $calculation    = new Calculation();
 
         $form = $this->createForm(CalculationType::class, $calculation);
         $data = json_decode($request->getContent(), true);
@@ -139,14 +134,14 @@ class CalculationController extends FOSRestController
         if($form->isSubmitted() && $form->isValid()) 
         {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($calculation);
             
-            $result->setResultNumber($calculation->getParameterOne() / $calculation->getParameterTwo());
+            $calculation->setResult($calculation->getParameterOne() / $calculation->getParameterTwo());
+            $calculation->setCalculType('division');
 
-            $em->persist($result);
+            $em->persist($calculation);
             $em->flush();
 
-            return $this->handleView($this->view(['status' => 'ok'], Response::HTTP_CREATED));
+            return $this->handleView($this->view(['result :' => $calculation->getResult()], Response::HTTP_CREATED));
         }
         return $this->handleView($this->$view($form->getErrors()));
     }

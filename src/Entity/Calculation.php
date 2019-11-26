@@ -19,23 +19,23 @@ class Calculation
     /**
      * @ORM\Column(type="integer")
      */
-    private $ParameterOne;
+    private $parameterOne;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $ParameterTwo;
+    private $parameterTwo;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Result", inversedBy="calculation", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="integer")
      */
-    private $Result;
+    private $result;
 
-    public function __construct(Result $result)
-    {
-        $this->Result = new Result();
-    }
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $calculType;
+
 
     public function getId(): ?int
     {
@@ -44,36 +44,48 @@ class Calculation
 
     public function getParameterOne(): ?int
     {
-        return $this->ParameterOne;
+        return $this->parameterOne;
     }
 
-    public function setParameterOne(int $ParameterOne): self
+    public function setParameterOne(int $parameterOne): self
     {
-        $this->ParameterOne = $ParameterOne;
+        $this->parameterOne = $parameterOne;
 
         return $this;
     }
 
     public function getParameterTwo(): ?int
     {
-        return $this->ParameterTwo;
+        return $this->parameterTwo;
     }
 
-    public function setParameterTwo(int $ParameterTwo): self
+    public function setParameterTwo(int $parameterTwo): self
     {
-        $this->ParameterTwo = $ParameterTwo;
+        $this->parameterTwo = $parameterTwo;
 
         return $this;
     }
 
-    public function getResult(): ?Result
+    public function getResult(): ?int
     {
-        return $this->Result;
+        return $this->result;
     }
 
-    public function setResult(Result $Result): self
+    public function setResult(int $result): self
     {
-        $this->Result = $Result;
+        $this->result = $result;
+
+        return $this;
+    }
+
+    public function getCalculType(): ?string
+    {
+        return $this->calculType;
+    }
+
+    public function setCalculType(string $calculType): self
+    {
+        $this->calculType = $calculType;
 
         return $this;
     }
