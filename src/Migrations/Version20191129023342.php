@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20191125235528 extends AbstractMigration
+final class Version20191129023342 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,7 +22,8 @@ final class Version20191125235528 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE calculation ADD calcul_type VARCHAR(20) NOT NULL');
+        $this->addSql('ALTER TABLE calculation ADD CONSTRAINT FK_F6A76970A76ED395 FOREIGN KEY (user_id) REFERENCES fos_user (id)');
+        $this->addSql('CREATE INDEX IDX_F6A76970A76ED395 ON calculation (user_id)');
     }
 
     public function down(Schema $schema) : void
@@ -30,6 +31,7 @@ final class Version20191125235528 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE calculation DROP calcul_type');
+        $this->addSql('ALTER TABLE calculation DROP FOREIGN KEY FK_F6A76970A76ED395');
+        $this->addSql('DROP INDEX IDX_F6A76970A76ED395 ON calculation');
     }
 }

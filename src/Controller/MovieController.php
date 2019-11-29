@@ -13,7 +13,7 @@ use App\Form\MovieType;
 /** 
  * Movie Controller
  * @Route("/api", name="api_")
-*/
+ **/
 class MovieController extends FOSRestController
 {
     /**
@@ -21,7 +21,7 @@ class MovieController extends FOSRestController
      * @Rest\Get("/movies")
      * 
      * @return Response
-     */
+     **/
     public function getMovieAction(Request $request)
     {
         $repository = $this->getDoctrine()->getRepository(Movie::class);
@@ -35,7 +35,7 @@ class MovieController extends FOSRestController
      * @Rest\Post("/movie")
      * 
      * @return Response
-     */
+     **/
     public function postMovieAction(Request $request)
     {
         $movie = new Movie();

@@ -36,6 +36,12 @@ class Calculation
      */
     private $calculType;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="calculations")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
 
     public function getId(): ?int
     {
@@ -86,6 +92,18 @@ class Calculation
     public function setCalculType(string $calculType): self
     {
         $this->calculType = $calculType;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

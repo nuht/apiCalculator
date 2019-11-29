@@ -10,6 +10,10 @@ use App\Entity\Movie;
 
 class MovieType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -19,6 +23,9 @@ class MovieType extends AbstractType
             ;
     }
 
+     /**
+     * @param OptionsResolverInterface $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

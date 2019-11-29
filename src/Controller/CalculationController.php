@@ -8,6 +8,8 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Calculation;
+use App\Entity\AccessToken;
+use App\Entity\User;
 use App\Form\CalculationType;
 
 /** 
@@ -45,12 +47,22 @@ class CalculationController extends FOSRestController
         $data = json_decode($request->getContent(), true);
         $form->submit($data);
 
+        $headers = getallheaders();
+        $authorizationHeader = $headers['Authorization'];
+        $token = substr($authorizationHeader, 7);
+        $accessTokenRepository = $this->getDoctrine()->getRepository(AccessToken::class);
+        $accessToken = $accessTokenRepository->findOneBy(['token' => $token]);
+        $userId = $accessToken->getUser()->getId();
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepository->find($userId);
+
         if($form->isSubmitted() && $form->isValid()) 
         {
             $em = $this->getDoctrine()->getManager();
             
             $calculation->setResult($calculation->getParameterOne() + $calculation->getParameterTwo());
             $calculation->setCalculType('addition');
+            $calculation->setUser($user);
 
             $em->persist($calculation);
             $em->flush();
