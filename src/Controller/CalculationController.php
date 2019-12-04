@@ -11,6 +11,8 @@ use App\Entity\Calculation;
 use App\Entity\AccessToken;
 use App\Entity\User;
 use App\Form\CalculationType;
+use App\Service\CurrentUserService;
+use Doctrine\ORM\EntityManagerInterface;
 
 /** 
  * Calculation Controller
@@ -18,19 +20,43 @@ use App\Form\CalculationType;
 */
 class CalculationController extends FOSRestController
 {
-
     /**
      * Lists all Calculations
-     * @Rest\Get("/calculations")
+     * @Rest\Get("/getCalculations")
      * 
      * @return Response
      */
-    public function getCalculations(Request $request)
+    public function getCalculations(Request $request, CurrentUserService $currentUserService, EntityManagerInterface $em)
     {
-        $repository = $this->getDoctrine()->getRepository(Calculation::class);
-        $calculations = $repository->findall();
+        $repository     = $em->getRepository(Calculation::class);
+        $user           = $currentUserService->getCurrentUser(getallheaders());
+        $calculations   = $repository->findBy(['user' => $user->getId()]);
 
         return $this->handleView($this->view($calculations));
+    }
+
+    /**
+     * Delete last user calculation
+     * @Rest\Get("/deleteLastCalculation")
+     * 
+     * @return Response
+     */
+    public function deleteLastUserCalculation(Request $request, CurrentUserService $currentUserService, EntityManagerInterface $em)
+    {
+
+        $repository             = $em->getRepository(Calculation::class);
+        $user                   = $currentUserService->getCurrentUser(getallheaders());
+        $lastUserCalculation    = $repository->deleteLastUserCalculation($user->getId());
+
+        if (empty($lastUserCalculation)) 
+        {
+            return $this->handleView($this->view(['status' => 'user doesn\'t have any result'], Response::HTTP_BAD_REQUEST));
+        }
+
+        $em->remove($lastUserCalculation[0]);
+        $em->flush();
+
+        return $this->handleView($this->view(['status' => 'last calculation deleted'], Response::HTTP_CREATED));
     }
 
     /**
@@ -39,7 +65,7 @@ class CalculationController extends FOSRestController
      * 
      * @return Response
      */
-    public function addition(Request $request)
+    public function addition(Request $request, CurrentUserService $currentUserService, EntityManagerInterface $em)
     {
         $calculation    = new Calculation();
 
@@ -47,19 +73,10 @@ class CalculationController extends FOSRestController
         $data = json_decode($request->getContent(), true);
         $form->submit($data);
 
-        $headers = getallheaders();
-        $authorizationHeader = $headers['Authorization'];
-        $token = substr($authorizationHeader, 7);
-        $accessTokenRepository = $this->getDoctrine()->getRepository(AccessToken::class);
-        $accessToken = $accessTokenRepository->findOneBy(['token' => $token]);
-        $userId = $accessToken->getUser()->getId();
-        $userRepository = $this->getDoctrine()->getRepository(User::class);
-        $user = $userRepository->find($userId);
+        $user = $currentUserService->getCurrentUser(getallheaders());
 
         if($form->isSubmitted() && $form->isValid()) 
         {
-            $em = $this->getDoctrine()->getManager();
-            
             $calculation->setResult($calculation->getParameterOne() + $calculation->getParameterTwo());
             $calculation->setCalculType('addition');
             $calculation->setUser($user);
@@ -78,7 +95,7 @@ class CalculationController extends FOSRestController
      * 
      * @return Response
      */
-    public function subtraction(Request $request)
+    public function subtraction(Request $request, CurrentUserService $currentUserService, EntityManagerInterface $em)
     {
         $calculation    = new Calculation();
 
@@ -86,12 +103,13 @@ class CalculationController extends FOSRestController
         $data = json_decode($request->getContent(), true);
         $form->submit($data);
 
+        $user = $currentUserService->getCurrentUser(getallheaders());
+
         if($form->isSubmitted() && $form->isValid()) 
         {
-            $em = $this->getDoctrine()->getManager();
-            
             $calculation->setResult($calculation->getParameterOne() - $calculation->getParameterTwo());
             $calculation->setCalculType('subtraction');
+            $calculation->setUser($user);
 
             $em->persist($calculation);
             $em->flush();
@@ -107,7 +125,7 @@ class CalculationController extends FOSRestController
      * 
      * @return Response
      */
-    public function multiplication(Request $request)
+    public function multiplication(Request $request, CurrentUserService $currentUserService, EntityManagerInterface $em)
     {
         $calculation    = new Calculation();
 
@@ -115,12 +133,13 @@ class CalculationController extends FOSRestController
         $data = json_decode($request->getContent(), true);
         $form->submit($data);
 
+        $user = $currentUserService->getCurrentUser(getallheaders());
+
         if($form->isSubmitted() && $form->isValid()) 
         {
-            $em = $this->getDoctrine()->getManager();
-            
             $calculation->setResult($calculation->getParameterOne() * $calculation->getParameterTwo());
             $calculation->setCalculType('multiplication');
+            $calculation->setUser($user);
 
             $em->persist($calculation);
             $em->flush();
@@ -135,7 +154,7 @@ class CalculationController extends FOSRestController
      * @Rest\Post("/division")
      * @return Response
      */
-    public function division(Request $request)
+    public function division(Request $request, CurrentUserService $currentUserService, EntityManagerInterface $em)
     {
         $calculation    = new Calculation();
 
@@ -143,12 +162,13 @@ class CalculationController extends FOSRestController
         $data = json_decode($request->getContent(), true);
         $form->submit($data);
 
+        $user = $currentUserService->getCurrentUser(getallheaders());
+
         if($form->isSubmitted() && $form->isValid()) 
         {
-            $em = $this->getDoctrine()->getManager();
-            
             $calculation->setResult($calculation->getParameterOne() / $calculation->getParameterTwo());
             $calculation->setCalculType('division');
+            $calculation->setUser($user);
 
             $em->persist($calculation);
             $em->flush();

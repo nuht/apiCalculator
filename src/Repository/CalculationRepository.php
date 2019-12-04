@@ -19,6 +19,18 @@ class CalculationRepository extends ServiceEntityRepository
         parent::__construct($registry, Calculation::class);
     }
 
+    public function deleteLastUserCalculation($userId)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.user = :val')
+            ->setParameter('val', $userId)
+            ->orderBy('c.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Calculation[] Returns an array of Calculation objects
     //  */
