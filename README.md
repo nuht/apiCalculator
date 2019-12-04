@@ -3,7 +3,7 @@
 lien du repository : https://github.com/nuht/apiCalculator.git
 
 Je vous remercie de m'avoir donné la chance de réaliser cet exercice. Je me suis inspiré des explications de cette personne car je n'avais jamais eu la chance de créer une api avant : https://www.adcisolutions.com/knowledge/getting-started-rest-api-symfony-4 
-J'ai par la suite regretté le bundle fosuserbundle car je n'ai pas réussi à utiliser la validation des données avec les formulaires et j'ai donc du faire ma validation moi même lors de la création d'un user. L'expérience a été très enrichissante pour moi, j'espère que vous serez satisfait du résultat.
+J'ai par la suite regretté le bundle fosuserbundle car je n'ai pas réussi à utiliser la validation des données avec les formulaires et j'ai donc dû faire ma validation moi même lors de la création d'un user. L'expérience a été très enrichissante pour moi, j'espère que vous serez satisfait du résultat.
 C'est aussi la première fois que j'utilise Postman.
 
 # Marche à suivre pour mettre en place le projet :
