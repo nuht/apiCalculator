@@ -63,7 +63,7 @@ Puis copier l'access_token obtenu. Celui ci servira de jeton d'accès dans toute
 5. Tester les autres requêtes en modifiant le header 'Authorization' avec comme valeur 'Bearer' et l'access_token précédemment obtenu.
 exemple : `Bearer YTU0NDIzODczY2UwMGJmNTc0MzgzNDg0ZGQ2N2JjMzc4MDE2ZTNmNDMwMGRlZTQ3MDQyOGQ0ODAzZjU3ZWUwNA`
 
-#Pour réaliser un calcul
+# Pour réaliser un calcul
 
 1. Il suffit d'utiliser la requête correspondante au type de calcul voulu et de modifier dans le body les différent paramètres en fonction des nombres voulus. Sans oublier de joindre l'access_token de notre user dans l'header de la requête comme expliqué précédemment dans le 5.
 
