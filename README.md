@@ -27,4 +27,5 @@ exemple du body :   `{
 
 exemple du résultat :   `"client_id": "1_1ntd1vyxi9a8swcsowck0co8cco88ccc0gwkos88cscockkck",
             "client_secret": "p48gsvqpqaokowc840w44kc4gkk8c84k8k4488s040okg48ks"`
+            
 4. Utiliser la requête "Get User Token" et modifier le json dans le body avec comme client_id et client_secret le résultat de la requête obtenu au 2. Ainsi que l'username et password de l'user crée à la requête du 3. Puis copier l'access_token obtenu. Celui ci servira de jeton d'accès dans toutes les autres requêtes de l'api.
